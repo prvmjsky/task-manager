@@ -5,6 +5,7 @@ plugins {
 	id("org.springframework.boot") version "4.0.0-M1"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("com.github.ben-manes.versions") version "0.52.0"
+	id("org.sonarqube") version "6.2.0.5505"
 }
 
 group = "hexlet.code"
@@ -12,6 +13,14 @@ version = "0.0.1-SNAPSHOT"
 
 application {
 	mainClass = "hexlet.code.AppApplication"
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "prvmjsky_java-project-99")
+		property("sonar.organization", "prvmjsky")
+		property("sonar.host.url", "https://sonarcloud.io")
+	}
 }
 
 configurations {
