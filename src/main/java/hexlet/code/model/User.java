@@ -10,8 +10,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,10 +34,7 @@ public class User implements BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
     private String firstName;
-
-    @NotBlank
     private String lastName;
 
     @Email
@@ -45,6 +42,7 @@ public class User implements BaseEntity {
     private String email;
 
     @NotNull
+    @Size(min = 3)
     private String password;
 
     @CreatedDate
