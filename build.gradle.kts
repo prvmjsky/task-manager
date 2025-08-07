@@ -48,6 +48,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("net.datafaker:datafaker:2.4.4")
 	testImplementation("org.instancio:instancio-junit:5.5.0")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 }
 

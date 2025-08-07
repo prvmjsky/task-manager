@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,5 +69,22 @@ public class UsersControllerTest {
         var actual = userDTOS.stream().map(userMapper::map).toList();
         var expected = userRepository.findAll();
         Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
+    }
+
+    @Test
+    public void testShow() throws Exception {
+        var id = testUser.getId();
+
+        var response = mockMvc.perform(get("/api/users/" + id))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse();
+        var body = response.getContentAsString();
+
+        assertThatJson(body).and(
+            v -> v.node("email").isEqualTo(testUser.getEmail()),
+            v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
+            v -> v.node("lastName").isEqualTo(testUser.getLastName())
+        );
     }
 }
