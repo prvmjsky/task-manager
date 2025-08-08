@@ -15,12 +15,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -53,11 +56,11 @@ public class UsersControllerTest {
         userRepository.deleteAll();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
-        userRepository.save(testUser);
     }
 
     @Test
     public void testIndex() throws Exception {
+        userRepository.save(testUser);
         var response = mockMvc.perform(get("/api/users"))
             .andExpect(status().isOk())
             .andReturn()
@@ -73,9 +76,8 @@ public class UsersControllerTest {
 
     @Test
     public void testShow() throws Exception {
-        var id = testUser.getId();
-
-        var response = mockMvc.perform(get("/api/users/" + id))
+        userRepository.save(testUser);
+        var response = mockMvc.perform(get("/api/users/" + testUser.getId()))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse();
@@ -86,5 +88,31 @@ public class UsersControllerTest {
             v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
             v -> v.node("lastName").isEqualTo(testUser.getLastName())
         );
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+
+        var request = post("/api/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(testUser));
+
+        var response = mockMvc.perform(request)
+            .andExpect(status().isCreated())
+            .andReturn()
+            .getResponse();
+
+        var body = response.getContentAsString();
+
+        assertThatJson(body).and(
+            v -> v.node("email").isEqualTo(testUser.getEmail()),
+            v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
+            v -> v.node("lastName").isEqualTo(testUser.getLastName())
+        );
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+
     }
 }
