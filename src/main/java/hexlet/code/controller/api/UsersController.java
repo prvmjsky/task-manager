@@ -60,22 +60,22 @@ public class UsersController {
         return mapper.map(model);
     }
 
-//    @PutMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public UserDTO update(@RequestBody UserUpdateDTO dto, @PathVariable Long id) {
-//
-//        var model = repository.findById(id)
-//            .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not found", id)));
-//
-//        mapper.update(dto, model);
-//
-//        repository.save(model);
-//        return mapper.map(model);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void delete(@PathVariable Long id) {
-//        repository.deleteById(id);
-//    }
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO update(@RequestBody UserUpdateDTO dto, @PathVariable Long id) {
+
+        var model = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not found", id)));
+
+        mapper.update(dto, model);
+
+        repository.save(model);
+        return mapper.map(model);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 }
