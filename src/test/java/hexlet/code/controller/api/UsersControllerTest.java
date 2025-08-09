@@ -30,7 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "command.line.runner.enabled=false",
+    "application.runner.enabled=false" })
 @AutoConfigureMockMvc
 public class UsersControllerTest {
 

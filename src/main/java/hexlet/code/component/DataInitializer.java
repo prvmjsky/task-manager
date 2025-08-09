@@ -18,14 +18,11 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
         var email = "hexlet@example.com";
-
-        if (userRepository.findByEmail(email).isEmpty()) {
-            var user = new User();
-            user.setEmail(email);
-            user.setPassword("qwerty");
-            userRepository.save(user);
-        }
+        var password = "qwerty";
+        var user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        userRepository.save(user);
     }
 }
