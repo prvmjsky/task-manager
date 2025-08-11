@@ -1,4 +1,4 @@
-package hexlet.code.dto;
+package hexlet.code.dto.users;
 
 import org.openapitools.jackson.nullable.JsonNullable;
 import jakarta.validation.constraints.NotNull;
