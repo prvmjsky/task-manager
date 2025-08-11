@@ -27,7 +27,7 @@ public class ModelGenerator {
                 .ignore(Select.field(User::getFirstName))
                 .ignore(Select.field(User::getLastName))
                 .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .supply(Select.field(User::getPassword), () -> faker.internet().password(3, 64))
+                .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 64))
                 .ignore(Select.field(User::getCreatedAt))
                 .ignore(Select.field(User::getUpdatedAt))
                 .toModel();
