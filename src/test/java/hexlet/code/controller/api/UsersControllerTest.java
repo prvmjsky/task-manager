@@ -2,12 +2,14 @@ package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.dto.users.UserDTO;
 import hexlet.code.dto.users.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.service.UserService;
 import hexlet.code.utils.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
@@ -28,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,13 +70,16 @@ public class UsersControllerTest {
     private UserMapper userMapper;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ObjectMapper om;
 
     private JwtRequestPostProcessor token;
 
     private User testUser;
 
-    private UserUpdateDTO dto;
+    private UserUpdateDTO testUserUpdateDTO;
 
     @BeforeEach
     public void setUp() {
@@ -87,10 +93,10 @@ public class UsersControllerTest {
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         token = jwt().jwt(builder ->builder.subject(testUser.getEmail()));
 
-        dto = new UserUpdateDTO();
-        dto.setFirstName(JsonNullable.of("Somebody"));
-        dto.setEmail(JsonNullable.of("once@told.me"));
-        dto.setPassword(JsonNullable.of("TheWorldIsGonnaRollMe"));
+        testUserUpdateDTO = new UserUpdateDTO();
+        testUserUpdateDTO.setFirstName(JsonNullable.of("Somebody"));
+        testUserUpdateDTO.setEmail(JsonNullable.of("once@told.me"));
+        testUserUpdateDTO.setPassword(JsonNullable.of("TheWorldIsGonnaRollMe"));
     }
 
     @Test
@@ -156,7 +162,7 @@ public class UsersControllerTest {
 
         var request = put("/api/users/" + testUser.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(dto));
+            .content(om.writeValueAsString(testUserUpdateDTO));
 
         mockMvc.perform(request.with(token))
             .andExpect(status().isOk());
@@ -165,8 +171,8 @@ public class UsersControllerTest {
             .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("User with id %d not found", testUser.getId())));
 
-        assertThat(user.getFirstName()).isEqualTo(dto.getFirstName().get());
-        assertThat(user.getEmail()).isEqualTo(dto.getEmail().get());
+        assertThat(user.getFirstName()).isEqualTo(testUserUpdateDTO.getFirstName().get());
+        assertThat(user.getEmail()).isEqualTo(testUserUpdateDTO.getEmail().get());
     }
 
     @Test
@@ -190,7 +196,7 @@ public class UsersControllerTest {
 
         var putRequest = put("/api/users/" + testUserId)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(dto));
+            .content(om.writeValueAsString(testUserUpdateDTO));
         mockMvc.perform(putRequest).andExpect(status().isUnauthorized());
 
         var user = userRepository.findById(testUserId)
@@ -198,5 +204,24 @@ public class UsersControllerTest {
                 String.format("User with id %d not found", testUserId)));
         assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
         assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
+    }
+
+    @Test
+    public void testLogin() throws Exception {
+
+        var dto = new UserCreateDTO();
+        dto.setEmail(testUser.getEmail());
+        dto.setPassword(testUser.getPassword());
+        userService.create(dto);
+
+        var loginData = Map.of(
+            "username", testUser.getUsername(),
+            "password", testUser.getPassword()
+        );
+
+        var request = post("/api/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(loginData));
+        mockMvc.perform(request).andExpect(status().isOk());
     }
 }
