@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(properties = {
     "command.line.runner.enabled=false",
-    "application.runner.enabled=false" })
+    "application.runner.enabled=false"})
 @AutoConfigureMockMvc
 public class UsersControllerTest {
 
@@ -92,7 +92,7 @@ public class UsersControllerTest {
             .build();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
-        token = jwt().jwt(builder ->builder.subject(testUser.getEmail()));
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
 
         testUserUpdateDTO = new UserUpdateDTO();
         testUserUpdateDTO.setFirstName(JsonNullable.of("Somebody"));
@@ -111,7 +111,8 @@ public class UsersControllerTest {
             .getResponse();
         var body = response.getContentAsString();
 
-        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() { });
+        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() {
+        });
 
         var actual = userDTOS.stream().map(userMapper::map).toList();
         var expected = userRepository.findAll();
@@ -229,5 +230,39 @@ public class UsersControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(om.writeValueAsString(loginData));
         mockMvc.perform(request).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testForbidden() throws Exception {
+
+        userRepository.save(testUser);
+        var testUserId = testUser.getId();
+
+        var loginData = Map.of(
+            "username", "malicious@stranger.su",
+            "password", "DoNotTrustMe666"
+        );
+
+        post("/api/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(loginData));
+
+        var wrongToken = jwt().jwt(builder -> builder.subject(loginData.get("username")));
+
+        var deleteRequest = delete("/api/users/" + testUserId);
+        mockMvc.perform(deleteRequest.with(wrongToken)).andExpect(status().isForbidden());
+        assertThat(userRepository.existsById(testUserId)).isTrue();
+
+
+        var putRequest = put("/api/users/" + testUserId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(testUserUpdateDTO));
+        mockMvc.perform(putRequest.with(wrongToken)).andExpect(status().isForbidden());
+
+        var user = userRepository.findById(testUserId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                String.format("User with id %d not found", testUserId)));
+        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
+        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
     }
 }
