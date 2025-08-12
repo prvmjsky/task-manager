@@ -73,6 +73,7 @@ public class UsersControllerTest {
 
     private User testUser;
 
+    private UserUpdateDTO dto;
 
     @BeforeEach
     public void setUp() {
@@ -85,6 +86,11 @@ public class UsersControllerTest {
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         token = jwt().jwt(builder ->builder.subject(testUser.getEmail()));
+
+        dto = new UserUpdateDTO();
+        dto.setFirstName(JsonNullable.of("Somebody"));
+        dto.setEmail(JsonNullable.of("once@told.me"));
+        dto.setPassword(JsonNullable.of("TheWorldIsGonnaRollMe"));
     }
 
     @Test
@@ -148,11 +154,6 @@ public class UsersControllerTest {
 
         userRepository.save(testUser);
 
-        var dto = new UserUpdateDTO();
-        dto.setFirstName(JsonNullable.of("Somebody"));
-        dto.setEmail(JsonNullable.of("once@told.me"));
-        dto.setPassword(JsonNullable.of("TheWorldIsGonnaRollMe"));
-
         var request = put("/api/users/" + testUser.getId())
             .contentType(MediaType.APPLICATION_JSON)
             .content(om.writeValueAsString(dto));
@@ -175,5 +176,27 @@ public class UsersControllerTest {
         mockMvc.perform(request.with(token))
             .andExpect(status().isNoContent());
         assertThat(userRepository.existsById(testUser.getId())).isFalse();
+    }
+
+    @Test
+    public void testUnauthorizedRestrictions() throws Exception {
+
+        userRepository.save(testUser);
+        var testUserId = testUser.getId();
+
+        var deleteRequest = delete("/api/users/" + testUserId);
+        mockMvc.perform(deleteRequest).andExpect(status().isUnauthorized());
+        assertThat(userRepository.existsById(testUserId)).isTrue();
+
+        var putRequest = put("/api/users/" + testUserId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(dto));
+        mockMvc.perform(putRequest).andExpect(status().isUnauthorized());
+
+        var user = userRepository.findById(testUserId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                String.format("User with id %d not found", testUserId)));
+        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
+        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
     }
 }
