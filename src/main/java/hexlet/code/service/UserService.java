@@ -3,6 +3,7 @@ package hexlet.code.service;
 import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.dto.users.UserDTO;
 import hexlet.code.dto.users.UserUpdateDTO;
+import hexlet.code.exception.UserExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
@@ -54,6 +55,11 @@ public class UserService implements UserDetailsManager {
     }
 
     public UserDTO create(UserCreateDTO dto) {
+
+        if (userExists(dto.getEmail())) {
+            throw new UserExistsException("User with this email already exists");
+        }
+
         var model = mapper.map(dto);
         model.setPasswordDigest(encoder.encode(dto.getPassword()));
         repository.save(model);
@@ -84,6 +90,11 @@ public class UserService implements UserDetailsManager {
 
     @Override
     public void createUser(UserDetails userData) {
+
+        if (userExists(userData.getUsername())) {
+            throw new UserExistsException("User with this username already exists");
+        }
+
         var user = new User();
         user.setEmail(userData.getUsername());
         var passwordDigest = encoder.encode(userData.getPassword());
