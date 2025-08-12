@@ -1,5 +1,6 @@
 package hexlet.code.handler;
 
+import hexlet.code.exception.NoSuchUserException;
 import hexlet.code.exception.UserExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,5 +20,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserExistsException.class)
     public ResponseEntity<String> handleUserExistsException(UserExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchUserException.class)
+    public ResponseEntity<String> handleNoSuchUserException(NoSuchUserException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }

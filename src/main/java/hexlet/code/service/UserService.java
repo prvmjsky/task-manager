@@ -8,8 +8,9 @@ import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,15 +31,8 @@ public class UserService implements UserDetailsManager {
     @Autowired
     private PasswordEncoder encoder;
 
-    public User getCurrentUser() {
-
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        return (User) loadUserByUsername(authentication.getName());
-    }
+    @Autowired
+    private UserUtils utils;
 
     public List<UserDTO> findAll() {
         return repository.findAll().stream()
@@ -66,6 +60,7 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
+    @PreAuthorize("@userUtils.isCurrentUserId(#id)")
     public UserDTO update(UserUpdateDTO dto, Long id) {
 
         var model = repository.findById(id)
@@ -78,6 +73,7 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
+    @PreAuthorize("@userUtils.isCurrentUserId(#id)")
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
@@ -102,6 +98,7 @@ public class UserService implements UserDetailsManager {
         repository.save(user);
     }
 
+    @PreAuthorize("@userUtils.isCurrentUserName(#username)")
     @Override
     public void deleteUser(String username) {
         repository.deleteByEmail(username);
