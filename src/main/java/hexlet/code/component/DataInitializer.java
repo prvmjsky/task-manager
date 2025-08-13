@@ -1,6 +1,6 @@
 package hexlet.code.component;
 
-import hexlet.code.dto.users.UserCreateDTO;
+import hexlet.code.dto.user.UserCreateDTO;
 import hexlet.code.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

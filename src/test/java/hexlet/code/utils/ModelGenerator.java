@@ -1,5 +1,6 @@
 package hexlet.code.utils;
 
+import hexlet.code.model.TaskStatus;
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.Select;
@@ -16,6 +17,7 @@ import net.datafaker.Faker;
 public class ModelGenerator {
 
     private Model<User> userModel;
+    private Model<TaskStatus> taskStatusModel;
 
     @Autowired
     private Faker faker;
@@ -30,6 +32,12 @@ public class ModelGenerator {
                 .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 64))
                 .ignore(Select.field(User::getCreatedAt))
                 .ignore(Select.field(User::getUpdatedAt))
+                .toModel();
+
+        taskStatusModel = Instancio.of(TaskStatus.class)
+                .ignore(Select.field(TaskStatus::getId))
+                .supply(Select.field(TaskStatus::getName), () -> faker.name().title())
+                .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
                 .toModel();
     }
 }
