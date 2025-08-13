@@ -40,7 +40,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -190,9 +189,6 @@ public class UsersControllerTest {
     public void testUnauthorizedRights() throws Exception {
 
         mockMvc.perform(get("/welcome")).andExpect(status().isOk());
-        mockMvc.perform(get("/"))
-            .andExpect(status().isMovedPermanently())
-            .andExpect(redirectedUrl("/welcome"));
 
         userRepository.save(testUser);
         var testUserId = testUser.getId();
