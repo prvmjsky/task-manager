@@ -154,6 +154,16 @@ public class UsersControllerTest {
             v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
             v -> v.node("lastName").isEqualTo(testUser.getLastName())
         );
+
+        var id = om.readTree(body).path("id").asLong();
+        assertThat(userRepository.existsById(id)).isTrue();
+        assertThat(userRepository.existsByEmail(testUser.getEmail())).isTrue();
+    }
+
+    @Test
+    public void testCreateUserMethod() throws Exception {
+        userService.createUser(testUser);
+        assertThat(userRepository.existsByEmail(testUser.getEmail())).isTrue();
     }
 
     @Test
