@@ -68,6 +68,7 @@ public class TaskStatusesControllerTest {
     private JwtRequestPostProcessor adminToken;
 
     private TaskStatus testTaskStatus;
+    private TaskStatus newStatus;
 
     private TaskStatusUpdateDTO testTaskStatusUpdateDTO;
 
@@ -85,6 +86,8 @@ public class TaskStatusesControllerTest {
 
         testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
         taskStatusRepository.save(testTaskStatus);
+
+        newStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
 
         testTaskStatusUpdateDTO = new TaskStatusUpdateDTO();
         testTaskStatusUpdateDTO.setName(JsonNullable.of("get good"));
@@ -126,11 +129,9 @@ public class TaskStatusesControllerTest {
     @Test
     public void testCreate() throws Exception {
 
-        var anotherStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
-
         var request = post("/api/task_statuses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(anotherStatus));
+            .content(om.writeValueAsString(newStatus));
 
         var response = mockMvc.perform(request.with(adminToken))
             .andExpect(status().isCreated())
@@ -139,13 +140,13 @@ public class TaskStatusesControllerTest {
         var body = response.getContentAsString();
 
         assertThatJson(body).and(
-            v -> v.node("name").isEqualTo(anotherStatus.getName()),
-            v -> v.node("slug").isEqualTo(anotherStatus.getSlug())
+            v -> v.node("name").isEqualTo(newStatus.getName()),
+            v -> v.node("slug").isEqualTo(newStatus.getSlug())
         );
 
         var id = om.readTree(body).path("id").asLong();
         assertThat(taskStatusRepository.existsById(id)).isTrue();
-        assertThat(taskStatusRepository.existsBySlug(anotherStatus.getSlug())).isTrue();
+        assertThat(taskStatusRepository.existsBySlug(newStatus.getSlug())).isTrue();
     }
 
     @Test
@@ -174,14 +175,31 @@ public class TaskStatusesControllerTest {
         assertThat(taskStatusRepository.existsById(testTaskStatus.getId())).isFalse();
     }
 
-    // TODO: test rights
     @Test
     public void testUnauthorizedRights() throws Exception {
 
-    }
+        var testTaskStatusId = testTaskStatus.getId();
 
-    @Test
-    public void testAuthorizedRights() throws Exception {
+        var deleteRequest = delete("/api/task_statuses/" + testTaskStatusId);
+
+        mockMvc.perform(deleteRequest).andExpect(status().isUnauthorized());
+        assertThat(taskStatusRepository.existsById(testTaskStatusId)).isTrue();
+
+        var postRequest = post("/api/task_statuses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(newStatus));
+
+        mockMvc.perform(postRequest).andExpect(status().isUnauthorized());
+        assertThat(newStatus.getId()).isNull();
+
+        var putRequest = put("/api/task_statuses/" + testTaskStatusId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(testTaskStatusUpdateDTO));
+
+        mockMvc.perform(putRequest).andExpect(status().isUnauthorized());
+        var foundStatus = taskStatusRepository.findById(testTaskStatusId);
+        assertThat(foundStatus.isPresent()).isTrue();
+        assertThat(foundStatus.get().getSlug()).isEqualTo(testTaskStatus.getSlug());
 
     }
 }
