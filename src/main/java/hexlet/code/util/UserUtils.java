@@ -1,6 +1,6 @@
 package hexlet.code.util;
 
-import hexlet.code.exception.NoSuchUserException;
+import hexlet.code.exception.WrongCredentialException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class UserUtils {
 
         var email = authentication.getName();
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new NoSuchUserException("No user found with this name"));
+            .orElseThrow(() -> new WrongCredentialException("No user found with this name"));
     }
 
     public boolean isCurrentUserId(Long id) {

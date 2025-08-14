@@ -1,7 +1,7 @@
 package hexlet.code.handler;
 
-import hexlet.code.exception.NoSuchUserException;
-import hexlet.code.exception.UserExistsException;
+import hexlet.code.exception.WrongCredentialException;
+import hexlet.code.exception.EntityExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(UserExistsException.class)
-    public ResponseEntity<String> handleUserExistsException(UserExistsException ex) {
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<String> handleEntityExistsException(EntityExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(NoSuchUserException.class)
-    public ResponseEntity<String> handleNoSuchUserException(NoSuchUserException ex) {
+    @ExceptionHandler(WrongCredentialException.class)
+    public ResponseEntity<String> handleWrongCredentialException(WrongCredentialException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }
