@@ -94,8 +94,6 @@ public class TaskStatusesControllerTest {
     @Test
     public void testIndex() throws Exception {
 
-        taskStatusRepository.save(testTaskStatus);
-
         var response = mockMvc.perform(get("/api/task_statuses").with(jwt()))
             .andExpect(status().isOk())
             .andReturn()
@@ -113,8 +111,6 @@ public class TaskStatusesControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        taskStatusRepository.save(testTaskStatus);
-
         var response = mockMvc.perform(get("/api/task_statuses/" + testTaskStatus.getId()).with(jwt()))
             .andExpect(status().isOk())
             .andReturn()
@@ -130,9 +126,11 @@ public class TaskStatusesControllerTest {
     @Test
     public void testCreate() throws Exception {
 
+        var anotherStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
+
         var request = post("/api/task_statuses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testTaskStatus));
+            .content(om.writeValueAsString(anotherStatus));
 
         var response = mockMvc.perform(request.with(adminToken))
             .andExpect(status().isCreated())
@@ -141,19 +139,17 @@ public class TaskStatusesControllerTest {
         var body = response.getContentAsString();
 
         assertThatJson(body).and(
-            v -> v.node("name").isEqualTo(testTaskStatus.getName()),
-            v -> v.node("slug").isEqualTo(testTaskStatus.getSlug())
+            v -> v.node("name").isEqualTo(anotherStatus.getName()),
+            v -> v.node("slug").isEqualTo(anotherStatus.getSlug())
         );
 
         var id = om.readTree(body).path("id").asLong();
         assertThat(taskStatusRepository.existsById(id)).isTrue();
-        assertThat(taskStatusRepository.existsBySlug(testTaskStatus.getSlug())).isTrue();
+        assertThat(taskStatusRepository.existsBySlug(anotherStatus.getSlug())).isTrue();
     }
 
     @Test
     public void testUpdate() throws Exception {
-
-        taskStatusRepository.save(testTaskStatus);
 
         var request = put("/api/task_statuses/" + testTaskStatus.getId())
             .contentType(MediaType.APPLICATION_JSON)
@@ -172,9 +168,8 @@ public class TaskStatusesControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        taskStatusRepository.save(testTaskStatus);
-        var request = delete("/api/task_statuses/" + testTaskStatus.getId());
-        mockMvc.perform(request.with(adminToken))
+
+        mockMvc.perform(delete("/api/task_statuses/" + testTaskStatus.getId()).with(adminToken))
             .andExpect(status().isNoContent());
         assertThat(taskStatusRepository.existsById(testTaskStatus.getId())).isFalse();
     }
