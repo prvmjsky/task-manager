@@ -15,6 +15,8 @@ public class UserUtils {
     @Autowired
     private UserRepository userRepository;
 
+    private final String adminUserName = "hexlet@example.com";
+
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -24,6 +26,11 @@ public class UserUtils {
         var email = authentication.getName();
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new WrongCredentialException("No user found with this name"));
+    }
+
+    public boolean isAdmin() {
+        var currentUserName = getCurrentUser().getUsername();
+        return currentUserName.equals(adminUserName);
     }
 
     public boolean isCurrentUserId(Long id) {
