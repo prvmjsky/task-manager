@@ -41,6 +41,7 @@ public class User implements UserDetails, BaseEntity {
     private String firstName;
     private String lastName;
 
+    @NotNull
     @Email
     @Column(unique = true)
     private String email;

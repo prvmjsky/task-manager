@@ -49,7 +49,7 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    public UserDTO create(@Valid UserCreateDTO dto) {
+    public UserDTO create(UserCreateDTO dto) {
 
         if (userExists(dto.getEmail())) {
             throw new EntityExistsException("User with this email already exists");
@@ -62,7 +62,7 @@ public class UserService implements UserDetailsManager {
     }
 
     @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
-    public UserDTO update(@Valid UserUpdateDTO dto, Long id) {
+    public UserDTO update(UserUpdateDTO dto, Long id) {
 
         var model = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not found", id)));
@@ -86,7 +86,7 @@ public class UserService implements UserDetailsManager {
     }
 
     @Override
-    public void createUser(@Valid UserDetails userData) {
+    public void createUser(UserDetails userData) {
 
         if (userExists(userData.getUsername())) {
             throw new EntityExistsException("User with this username already exists");

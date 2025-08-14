@@ -12,6 +12,7 @@ public class UserCreateDTO {
     private String firstName;
     private String lastName;
 
+    @NotNull
     @Email
     private String email;
 
