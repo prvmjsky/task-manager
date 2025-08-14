@@ -50,4 +50,7 @@ public class TaskStatus implements BaseEntity {
 
     @CreatedDate
     private LocalDate createdAt;
+
+    @LastModifiedDate
+    private LocalDate modifiedAt;
 }

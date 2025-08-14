@@ -9,6 +9,7 @@ import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.UserUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,7 +49,7 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    public UserDTO create(UserCreateDTO dto) {
+    public UserDTO create(@Valid UserCreateDTO dto) {
 
         if (userExists(dto.getEmail())) {
             throw new EntityExistsException("User with this email already exists");
@@ -60,8 +61,8 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    @PreAuthorize("@userUtils.isCurrentUserId(#id)")
-    public UserDTO update(UserUpdateDTO dto, Long id) {
+    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
+    public UserDTO update(@Valid UserUpdateDTO dto, Long id) {
 
         var model = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not found", id)));
@@ -73,7 +74,7 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    @PreAuthorize("@userUtils.isCurrentUserId(#id)")
+    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
@@ -85,7 +86,7 @@ public class UserService implements UserDetailsManager {
     }
 
     @Override
-    public void createUser(UserDetails userData) {
+    public void createUser(@Valid UserDetails userData) {
 
         if (userExists(userData.getUsername())) {
             throw new EntityExistsException("User with this username already exists");
@@ -98,7 +99,7 @@ public class UserService implements UserDetailsManager {
         repository.save(user);
     }
 
-    @PreAuthorize("@userUtils.isCurrentUserName(#username)")
+    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
     @Override
     public void deleteUser(String username) {
         repository.deleteByEmail(username);

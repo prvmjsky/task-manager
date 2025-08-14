@@ -7,6 +7,7 @@ import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.exception.EntityExistsException;
 import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.repository.TaskStatusRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,7 +52,7 @@ public class TaskStatusesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskStatusDTO create(@RequestBody TaskStatusCreateDTO dto) {
+    public TaskStatusDTO create(@Valid @RequestBody TaskStatusCreateDTO dto) {
 
         if (repository.existsBySlug(dto.getSlug())) {
             throw new EntityExistsException("Task status with this slug already exists");
@@ -64,7 +65,7 @@ public class TaskStatusesController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TaskStatusDTO update(@RequestBody TaskStatusUpdateDTO dto, @PathVariable Long id) {
+    public TaskStatusDTO update(@Valid @RequestBody TaskStatusUpdateDTO dto, @PathVariable Long id) {
 
         var model = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(String.format("Task status with id %d not found", id)));
