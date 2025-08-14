@@ -1,38 +1,33 @@
 package hexlet.code.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
-
 import static jakarta.persistence.GenerationType.IDENTITY;
-
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "task_statuses")
+@Table(name = "tasks")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TaskStatus implements BaseEntity {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -40,17 +35,21 @@ public class TaskStatus implements BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(unique = true)
+    @Column
     @Size(min = 1)
     private String name;
 
-    @NotNull
-    @Column(unique = true)
-    @Size(min = 1)
-    private String slug;
+    private Integer index;
+    private String description;
 
-    @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE)
-    private List<Task> task = new ArrayList<>();
+    @NotNull
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    private TaskStatus taskStatus;
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    private User assignee;
 
     @CreatedDate
     private LocalDate createdAt;
