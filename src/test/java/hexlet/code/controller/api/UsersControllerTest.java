@@ -83,6 +83,7 @@ public class UsersControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         userRepository.deleteAll();
 
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -95,8 +96,8 @@ public class UsersControllerTest {
 
         testUserUpdateDTO = new UserUpdateDTO();
         testUserUpdateDTO.setFirstName(JsonNullable.of("Somebody"));
-        testUserUpdateDTO.setEmail(JsonNullable.of("once@told.me"));
-        testUserUpdateDTO.setPassword(JsonNullable.of("TheWorldIsGonnaRollMe"));
+        testUserUpdateDTO.setEmail(JsonNullable.undefined());
+        testUserUpdateDTO.setPassword(JsonNullable.of("OnceToldMe"));
     }
 
     @Test
@@ -183,7 +184,7 @@ public class UsersControllerTest {
                 String.format("User with id %d not found", testUser.getId())));
 
         assertThat(user.getFirstName()).isEqualTo(testUserUpdateDTO.getFirstName().get());
-        assertThat(user.getEmail()).isEqualTo(testUserUpdateDTO.getEmail().get());
+        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
     }
 
     @Test
@@ -216,7 +217,6 @@ public class UsersControllerTest {
             .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("User with id %d not found", testUserId)));
         assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
     }
 
     @Test
@@ -269,6 +269,5 @@ public class UsersControllerTest {
             .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("User with id %d not found", testUserId)));
         assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
     }
 }
