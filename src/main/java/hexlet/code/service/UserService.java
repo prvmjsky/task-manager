@@ -9,7 +9,6 @@ import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.UserUtils;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,7 +55,6 @@ public class UserService implements UserDetailsManager {
         }
 
         var model = mapper.map(dto);
-        model.setPasswordDigest(encoder.encode(dto.getPassword()));
         repository.save(model);
         return mapper.map(model);
     }
@@ -68,8 +66,6 @@ public class UserService implements UserDetailsManager {
             .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not found", id)));
 
         mapper.update(dto, model);
-        model.setPasswordDigest(encoder.encode(dto.getPassword().get()));
-
         repository.save(model);
         return mapper.map(model);
     }

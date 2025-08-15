@@ -1,6 +1,5 @@
 package hexlet.code.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +7,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,9 +33,7 @@ public class Task {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotNull
-    @Column
-    @Size(min = 1)
+    @NotBlank
     private String name;
 
     private Integer index;
