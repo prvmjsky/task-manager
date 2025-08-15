@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,8 +80,6 @@ public class UsersControllerTest {
     private JwtRequestPostProcessor testUserToken;
     private JwtRequestPostProcessor newUserToken;
 
-    private UserUpdateDTO testUserUpdateDTO;
-
     @BeforeEach
     public void setUp() {
 
@@ -98,11 +97,6 @@ public class UsersControllerTest {
 
         testUserToken = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         newUserToken = jwt().jwt(builder -> builder.subject(newUser.getEmail()));
-
-        testUserUpdateDTO = new UserUpdateDTO();
-        testUserUpdateDTO.setFirstName(JsonNullable.of("Somebody"));
-        testUserUpdateDTO.setEmail(JsonNullable.undefined());
-        testUserUpdateDTO.setPassword(JsonNullable.of("OnceToldMe"));
     }
 
     @Test
@@ -165,16 +159,22 @@ public class UsersControllerTest {
     @Test
     public void testUpdate() throws Exception {
 
+        var dto = new UserUpdateDTO();
+        dto.setFirstName(JsonNullable.of("Somebody"));
+        dto.setLastName(JsonNullable.undefined());
+        dto.setEmail(JsonNullable.undefined());
+        dto.setPassword(JsonNullable.of("OnceToldMe"));
+
         var request = put("/api/users/" + testUser.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testUserUpdateDTO));
+            .content(om.writeValueAsString(dto));
 
         mockMvc.perform(request.with(testUserToken))
             .andExpect(status().isOk());
 
         var foundUser = userRepository.findById(testUser.getId());
         assertThat(foundUser.isPresent()).isTrue();
-        assertThat(foundUser.get().getFirstName()).isEqualTo(testUserUpdateDTO.getFirstName().get());
+        assertThat(foundUser.get().getFirstName()).isEqualTo(dto.getFirstName().get());
         assertThat(foundUser.get().getEmail()).isEqualTo(testUser.getEmail());
     }
 
@@ -198,7 +198,7 @@ public class UsersControllerTest {
 
         var putRequest = put("/api/users/" + testUserId)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testUserUpdateDTO));
+            .content(om.writeValueAsString(Map.of("email", "doesitmatter@any.way")));
         mockMvc.perform(putRequest).andExpect(status().isUnauthorized());
 
         var foundUser = userRepository.findById(testUserId);
@@ -222,7 +222,7 @@ public class UsersControllerTest {
 
         var putRequest = put("/api/users/" + testUserId)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testUserUpdateDTO));
+            .content(om.writeValueAsString(Map.of("email", "doesitmatter@any.way")));
         mockMvc.perform(putRequest.with(newUserToken))
             .andExpect(status().isForbidden());
 
