@@ -1,5 +1,6 @@
 package hexlet.code.utils;
 
+import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import org.instancio.Instancio;
 import org.instancio.Model;
@@ -18,6 +19,7 @@ public class ModelGenerator {
 
     private Model<User> userModel;
     private Model<TaskStatus> taskStatusModel;
+    private Model<Task> taskModel;
 
     @Autowired
     private Faker faker;
@@ -30,8 +32,6 @@ public class ModelGenerator {
                 .ignore(Select.field(User::getLastName))
                 .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
                 .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 64))
-                .ignore(Select.field(User::getCreatedAt))
-                .ignore(Select.field(User::getUpdatedAt))
                 .toModel();
 
         taskStatusModel = Instancio.of(TaskStatus.class)
@@ -39,6 +39,14 @@ public class ModelGenerator {
                 .supply(Select.field(TaskStatus::getName), () -> faker.name().title())
                 .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
                 .toModel();
+
+        taskModel = Instancio.of(Task.class)
+            .ignore(Select.field(Task::getId))
+            .supply(Select.field(Task::getIndex), () -> faker.number().numberBetween(0, 999))
+            .supply(Select.field(Task::getName), () -> faker.name().title())
+            .supply(Select.field(Task::getDescription), () -> faker.lorem().characters(0, 200))
+            .ignore(Select.field(Task::getTaskStatus))
+            .toModel();
     }
 }
 
