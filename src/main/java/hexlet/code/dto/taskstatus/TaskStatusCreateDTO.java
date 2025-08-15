@@ -1,6 +1,5 @@
 package hexlet.code.dto.taskstatus;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

@@ -33,7 +33,7 @@ public class TasksController {
     private TaskMapper mapper;
 
     @GetMapping
-    public List<TaskDTO> index () {
+    public List<TaskDTO> index() {
         return repository.findAll().stream()
             .map(mapper::map)
             .toList();

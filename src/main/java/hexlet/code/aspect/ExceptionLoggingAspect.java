@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExceptionLoggingAspect {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExceptionLoggingAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionLoggingAspect.class);
 
     @AfterThrowing(pointcut = "within(@org.springframework.stereotype.Controller *)", throwing = "ex")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
-        logger.error("Exception in method {}: {}", joinPoint.getSignature(), ex.getMessage(), ex);
+        LOGGER.error("Exception in method {}: {}", joinPoint.getSignature(), ex.getMessage(), ex);
     }
 }

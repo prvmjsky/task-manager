@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public abstract class UserMapper {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mapping(source = "password", target = "passwordDigest")
     public abstract User map(UserCreateDTO dto);
