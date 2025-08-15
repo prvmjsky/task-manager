@@ -99,7 +99,7 @@ public class UserService implements UserDetailsManager {
         repository.save(user);
     }
 
-    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
+    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserName(#username)")
     @Override
     public void deleteUser(String username) {
         repository.deleteByEmail(username);
