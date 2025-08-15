@@ -70,8 +70,6 @@ public class TaskStatusesControllerTest {
     private TaskStatus testTaskStatus;
     private TaskStatus newStatus;
 
-    private TaskStatusUpdateDTO testTaskStatusUpdateDTO;
-
     @BeforeEach
     public void setUp() {
 
@@ -88,10 +86,6 @@ public class TaskStatusesControllerTest {
         taskStatusRepository.save(testTaskStatus);
 
         newStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
-
-        testTaskStatusUpdateDTO = new TaskStatusUpdateDTO();
-        testTaskStatusUpdateDTO.setName(JsonNullable.of("get good"));
-        testTaskStatusUpdateDTO.setSlug(JsonNullable.undefined());
     }
 
     @Test
@@ -152,9 +146,13 @@ public class TaskStatusesControllerTest {
     @Test
     public void testUpdate() throws Exception {
 
+        var dto = new TaskStatusUpdateDTO();
+        dto.setName(JsonNullable.of("toBe"));
+        dto.setSlug(JsonNullable.undefined());
+
         var request = put("/api/task_statuses/" + testTaskStatus.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testTaskStatusUpdateDTO));
+            .content(om.writeValueAsString(dto));
 
         mockMvc.perform(request.with(adminToken))
             .andExpect(status().isOk());
@@ -163,7 +161,7 @@ public class TaskStatusesControllerTest {
             .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("Task status with id %d not found", testTaskStatus.getId())));
 
-        assertThat(taskStatus.getName()).isEqualTo(testTaskStatusUpdateDTO.getName().get());
+        assertThat(taskStatus.getName()).isEqualTo(dto.getName().get());
         assertThat(taskStatus.getSlug()).isEqualTo(testTaskStatus.getSlug());
     }
 
@@ -177,6 +175,10 @@ public class TaskStatusesControllerTest {
 
     @Test
     public void testUnauthorizedRights() throws Exception {
+
+        var dto = new TaskStatusUpdateDTO();
+        dto.setName(JsonNullable.of("toBe"));
+        dto.setSlug(JsonNullable.undefined());
 
         var testTaskStatusId = testTaskStatus.getId();
 
@@ -194,7 +196,7 @@ public class TaskStatusesControllerTest {
 
         var putRequest = put("/api/task_statuses/" + testTaskStatusId)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(testTaskStatusUpdateDTO));
+            .content(om.writeValueAsString(dto));
 
         mockMvc.perform(putRequest).andExpect(status().isUnauthorized());
         var foundStatus = taskStatusRepository.findById(testTaskStatusId);
