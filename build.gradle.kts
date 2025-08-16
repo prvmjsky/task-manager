@@ -24,7 +24,7 @@ sonar {
 	}
 }
 
-tasks.withType<JavaCompile>(){
+tasks.withType<JavaCompile>{
 	options.compilerArgs.add("-parameters")
 }
 
@@ -39,17 +39,23 @@ repositories {
 }
 
 dependencies {
-	implementation("org.mapstruct:mapstruct:1.6.3")
-	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+	val mapstructVer = "1.6.3"
+	val springdocVer = "2.8.9"
+
+	implementation("org.mapstruct:mapstruct:$mapstructVer")
+	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVer")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-aop:4.0.0-M1")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	testImplementation("org.springframework.security:spring-security-test")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVer")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVer")
+	testImplementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVer")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
