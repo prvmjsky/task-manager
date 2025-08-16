@@ -26,7 +26,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Task {
+public class Task implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

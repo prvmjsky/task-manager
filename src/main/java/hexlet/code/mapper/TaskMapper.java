@@ -6,7 +6,6 @@ import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
-import hexlet.code.model.User;
 import hexlet.code.repository.TaskStatusRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,7 +28,7 @@ public abstract class TaskMapper {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
-    @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "assigneeIdToUser")
+    @Mapping(target = "assignee", source = "assigneeId")
     @Mapping(target = "name", source = "title")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus")
@@ -41,7 +40,7 @@ public abstract class TaskMapper {
     @Mapping(target = "status", source = "taskStatus.slug")
     public abstract TaskDTO map(Task model);
 
-    @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "assigneeIdToUser")
+    @Mapping(target = "assignee", source = "assigneeId")
     @Mapping(target = "name", source = "title")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus")
@@ -52,17 +51,5 @@ public abstract class TaskMapper {
         return taskStatusRepository.findBySlug(slug)
             .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("Task status with slug %s not found", slug)));
-    }
-
-    @Named("assigneeIdToUser")
-    public User assigneeIdToUser(Long id) {
-
-        if (id == null) {
-            return null;
-        }
-
-        var user = new User();
-        user.setId(id);
-        return user;
     }
 }
