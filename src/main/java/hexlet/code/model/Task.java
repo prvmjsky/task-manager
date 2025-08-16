@@ -3,6 +3,7 @@ package hexlet.code.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
@@ -52,7 +53,7 @@ public class Task implements BaseEntity {
     @OnDelete(action = OnDeleteAction.RESTRICT)
     private User assignee;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     private Set<Label> labelsUsed = new HashSet<>();
 

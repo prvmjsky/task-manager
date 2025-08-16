@@ -29,18 +29,20 @@ public class ModelGenerator {
     @PostConstruct
     private void init() {
         userModel = Instancio.of(User.class)
-                .ignore(Select.field(User::getId))
-                .ignore(Select.field(User::getFirstName))
-                .ignore(Select.field(User::getLastName))
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 64))
-                .toModel();
+            .ignore(Select.field(User::getId))
+            .ignore(Select.field(User::getFirstName))
+            .ignore(Select.field(User::getLastName))
+            .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
+            .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 64))
+            .ignore(Select.field(User::getTasks))
+            .toModel();
 
         taskStatusModel = Instancio.of(TaskStatus.class)
-                .ignore(Select.field(TaskStatus::getId))
-                .supply(Select.field(TaskStatus::getName), () -> faker.name().title())
-                .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
-                .toModel();
+            .ignore(Select.field(TaskStatus::getId))
+            .supply(Select.field(TaskStatus::getName), () -> faker.name().title())
+            .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
+            .ignore(Select.field(TaskStatus::getTask))
+            .toModel();
 
         taskModel = Instancio.of(Task.class)
             .ignore(Select.field(Task::getId))
@@ -48,6 +50,7 @@ public class ModelGenerator {
             .supply(Select.field(Task::getName), () -> faker.name().title())
             .supply(Select.field(Task::getDescription), () -> faker.lorem().characters(0, 200))
             .ignore(Select.field(Task::getTaskStatus))
+            .ignore(Select.field(Task::getLabelsUsed))
             .toModel();
 
         labelModel = Instancio.of(Label.class)

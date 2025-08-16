@@ -32,7 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "command.line.runner.enabled=false",
+    "application.runner.enabled=false"})
 @AutoConfigureMockMvc
 @Transactional
 @Rollback
@@ -64,8 +66,6 @@ public class TasksControllerTest {
 
     @BeforeEach
     public void setUp() {
-
-        taskRepository.deleteAll();
 
         adminToken = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
 

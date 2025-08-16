@@ -18,6 +18,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,11 @@ public abstract class TaskMapper {
 
     @Named("labelIdsToLabels")
     public Set<Label> labelIdsToLabels(Set<Long> ids) {
+
+        if (ids == null) {
+            return Collections.emptySet();
+        }
+
         return ids.stream()
             .map(id -> labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -75,6 +81,11 @@ public abstract class TaskMapper {
 
     @Named("labelsToLabelIds")
     public Set<Long> labelsToLabelIds(Set<Label> labels) {
+
+        if (labels == null) {
+            return Collections.emptySet();
+        }
+
         return labels.stream()
             .map(Label::getId)
             .collect(Collectors.toSet());

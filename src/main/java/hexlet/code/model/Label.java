@@ -43,7 +43,7 @@ public class Label implements BaseEntity {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "labelsUsed", cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "labelsUsed")
     private Set<Task> tasks;
 
     @CreatedDate

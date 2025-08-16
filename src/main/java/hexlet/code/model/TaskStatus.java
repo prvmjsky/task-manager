@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -49,7 +50,7 @@ public class TaskStatus implements BaseEntity {
     @Size(min = 1)
     private String slug;
 
-    @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "taskStatus", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Task> task = new ArrayList<>();
 
     @CreatedDate

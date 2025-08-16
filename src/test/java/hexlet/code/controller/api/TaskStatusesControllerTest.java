@@ -74,8 +74,6 @@ public class TaskStatusesControllerTest {
     @BeforeEach
     public void setUp() {
 
-        taskStatusRepository.deleteAll();
-
         adminToken = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
 
         testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();

@@ -28,7 +28,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "command.line.runner.enabled=false",
+    "application.runner.enabled=false"})
 @AutoConfigureMockMvc
 @Transactional
 @Rollback
@@ -120,15 +122,15 @@ public class TasksFilteredIndexTest {
             .andReturn()
             .getResponse()
             .getContentAsString();
-        assertThat(result).doesNotContain(task1.getName(), task3.getName()).contains(task2.getName());
-        assertThat(result).contains(task2.getDescription()).doesNotContain(task1.getDescription());
+        assertThat(result).doesNotContain(task1.getName(), task2.getName()).contains(task3.getName());
+        assertThat(result).contains(task3.getDescription()).doesNotContain(task1.getDescription());
 
         var emptyResult = mockMvc.perform(get("/api/tasks?titleCont=4").with(adminToken))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
             .getContentAsString();
-        assertThatJson(emptyResult).isArray().isEmpty();
+        assertThatJson(emptyResult).node("content").isArray().isEmpty();
     }
 
     @Test
@@ -169,7 +171,7 @@ public class TasksFilteredIndexTest {
         var resultEmpty = mockMvc.perform(get("/api/tasks?status=slugslugslug").with(adminToken))
             .andExpect(status().isOk());
 
-        String responseContent = resultEmpty.andReturn().getResponse().getContentAsString();
-        assertThatJson(responseContent).isArray().isEmpty();
+        var emptyResult = resultEmpty.andReturn().getResponse().getContentAsString();
+        assertThatJson(emptyResult).node("content").isArray().isEmpty();
     }
 }

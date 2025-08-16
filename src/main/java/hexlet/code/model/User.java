@@ -5,6 +5,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -55,7 +56,7 @@ public class User implements UserDetails, BaseEntity {
     private String passwordDigest;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "assignee", fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>();
 
     @CreatedDate
