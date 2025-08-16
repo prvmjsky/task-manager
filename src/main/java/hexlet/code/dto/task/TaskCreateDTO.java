@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,4 +27,6 @@ public class TaskCreateDTO {
 
     @NotNull
     private String status;
+
+    private Set<Long> taskLabelIds = new HashSet<>();
 }
