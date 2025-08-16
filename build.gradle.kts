@@ -3,7 +3,7 @@ plugins {
 	checkstyle
 	jacoco
 	id("io.freefair.lombok") version "8.14"
-	id("org.springframework.boot") version "4.0.0-M1"
+	id("org.springframework.boot") version "3.2.3"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("se.patrikerdes.use-latest-versions") version "0.2.19"
 	id("com.github.ben-manes.versions") version "0.52.0"
@@ -53,7 +53,7 @@ repositories {
 
 dependencies {
 	val mapstructVer = "1.6.3"
-	val springdocVer = "2.8.9"
+	val springdocVer = "2.6.0"
 
 	implementation("org.mapstruct:mapstruct:$mapstructVer")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVer")
@@ -77,7 +77,7 @@ dependencies {
 	testImplementation("org.instancio:instancio-junit:5.5.1")
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-	implementation("io.sentry:sentry-opentelemetry-agent:8.19.1")
+	implementation("io.sentry:sentry-opentelemetry-agent:8.19.0")
 }
 
 tasks.withType<Test> {
