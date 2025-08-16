@@ -130,7 +130,7 @@ public class TasksFilteredIndexTest {
             .andReturn()
             .getResponse()
             .getContentAsString();
-        assertThatJson(emptyResult).node("content").isArray().isEmpty();
+        assertThatJson(emptyResult).isArray().isEmpty();
     }
 
     @Test
@@ -172,6 +172,6 @@ public class TasksFilteredIndexTest {
             .andExpect(status().isOk());
 
         var emptyResult = resultEmpty.andReturn().getResponse().getContentAsString();
-        assertThatJson(emptyResult).node("content").isArray().isEmpty();
+        assertThatJson(emptyResult).isArray().isEmpty();
     }
 }

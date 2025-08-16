@@ -11,9 +11,9 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.specification.TaskSpecification;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -39,10 +41,18 @@ public class TasksController {
     private TaskSpecification specBuilder;
 
     @GetMapping
-    public Page<TaskDTO> index(TaskParamsDTO params, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<List<TaskDTO>> index(
+        TaskParamsDTO params,
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "15") int pageSize) {
+
         var spec = specBuilder.build(params);
-        var tasks = repository.findAll(spec, PageRequest.of(page - 1, 15));
-        return tasks.map(mapper::map);
+        var pageParams = PageRequest.of(page - 1, pageSize);
+        var tasks = repository.findAll(spec, pageParams).map(mapper::map).toList();
+
+        return ResponseEntity.ok()
+            .header("X-Total-Count", String.valueOf(repository.findAll().size()))
+            .body(tasks);
     }
 
     @GetMapping("/{id}")
