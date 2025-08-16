@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,6 +30,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 public class Label implements BaseEntity {
 
     @Id
@@ -49,4 +51,8 @@ public class Label implements BaseEntity {
 
     @LastModifiedDate
     private LocalDate updatedAt;
+
+    public Label(String name) {
+        this.name = name;
+    }
 }

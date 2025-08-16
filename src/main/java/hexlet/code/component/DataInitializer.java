@@ -1,7 +1,9 @@
 package hexlet.code.component;
 
 import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class DataInitializer implements ApplicationRunner {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -44,5 +49,8 @@ public class DataInitializer implements ApplicationRunner {
             status.setSlug(slug);
             taskStatusRepository.save(status);
         });
+
+        labelRepository.save(new Label("bug"));
+        labelRepository.save(new Label("feature"));
     }
 }
