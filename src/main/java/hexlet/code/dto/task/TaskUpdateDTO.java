@@ -32,5 +32,5 @@ public class TaskUpdateDTO {
     @NotNull
     private JsonNullable<String> status;
 
-    private Set<Long> taskLabelIds = new HashSet<>();
+    private JsonNullable<Set<Long>> taskLabelIds;
 }
