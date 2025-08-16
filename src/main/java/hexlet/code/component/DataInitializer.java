@@ -31,10 +31,10 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        var user = new UserCreateDTO();
-        user.setEmail("hexlet@example.com");
-        user.setPassword("qwerty");
-        userService.create(user);
+        var admin = new UserCreateDTO();
+        admin.setEmail("hexlet@example.com");
+        admin.setPassword("qwerty");
+        userService.create(admin);
 
         var defaultStatuses = Map.of(
             "Draft", "draft",
@@ -44,9 +44,7 @@ public class DataInitializer implements ApplicationRunner {
             "Published", "published");
 
         defaultStatuses.forEach((name, slug) -> {
-            var status = new TaskStatus();
-            status.setName(name);
-            status.setSlug(slug);
+            var status = new TaskStatus(name, slug);
             taskStatusRepository.save(status);
         });
 

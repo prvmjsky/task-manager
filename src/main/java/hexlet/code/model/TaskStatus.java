@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,6 +31,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 public class TaskStatus implements BaseEntity {
 
     @Id
@@ -55,4 +57,9 @@ public class TaskStatus implements BaseEntity {
 
     @LastModifiedDate
     private LocalDate updatedAt;
+
+    public TaskStatus(String name, String slug) {
+        this.name = name;
+        this.slug = slug;
+    }
 }
