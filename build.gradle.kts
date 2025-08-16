@@ -5,6 +5,7 @@ plugins {
 	id("io.freefair.lombok") version "8.14"
 	id("org.springframework.boot") version "4.0.0-M1"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("se.patrikerdes.use-latest-versions") version "0.2.19"
 	id("com.github.ben-manes.versions") version "0.52.0"
 	id("org.sonarqube") version "6.2.0.5505"
 	id("io.sentry.jvm.gradle") version "5.9.0"
@@ -73,10 +74,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("net.datafaker:datafaker:2.4.4")
-	testImplementation("org.instancio:instancio-junit:5.5.0")
+	testImplementation("org.instancio:instancio-junit:5.5.1")
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-	implementation("io.sentry:sentry-opentelemetry-agent:8.16.0")
+	implementation("io.sentry:sentry-opentelemetry-agent:8.19.1")
 }
 
 tasks.withType<Test> {
