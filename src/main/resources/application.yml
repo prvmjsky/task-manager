@@ -29,3 +29,7 @@ logging:
           context: DEBUG
         boot:
           test: DEBUG
+
+sentry:
+  dsn: https://2bebb6b706e397e7fa57d21b27d71a9e@o4509852853731328.ingest.de.sentry.io/4509852892856400
+  send-default-pii: true

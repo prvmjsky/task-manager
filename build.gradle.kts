@@ -7,6 +7,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("com.github.ben-manes.versions") version "0.52.0"
 	id("org.sonarqube") version "6.2.0.5505"
+	id("io.sentry.jvm.gradle") version "5.9.0"
 }
 
 group = "hexlet.code"
@@ -22,6 +23,17 @@ sonar {
 		property("sonar.organization", "prvmjsky")
 		property("sonar.host.url", "https://sonarcloud.io")
 	}
+}
+
+sentry {
+	includeSourceContext = true
+	org = "sneeds-feed-seed"
+	projectName = "java-spring-boot"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+tasks.sentryBundleSourcesJava {
+	enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
 
 tasks.withType<JavaCompile>{
@@ -64,6 +76,7 @@ dependencies {
 	testImplementation("org.instancio:instancio-junit:5.5.0")
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+	implementation("io.sentry:sentry-opentelemetry-agent:8.16.0")
 }
 
 tasks.withType<Test> {
