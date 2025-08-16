@@ -78,6 +78,7 @@ dependencies {
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("io.sentry:sentry-opentelemetry-agent:8.19.0")
+	jacocoAgent("org.jacoco:org.jacoco.agent:0.8.13")
 }
 
 tasks.withType<Test> {
