@@ -1,12 +1,11 @@
 package hexlet.code.component;
 
+import hexlet.code.dto.label.LabelCreateDTO;
+import hexlet.code.dto.taskstatus.TaskStatusCreateDTO;
 import hexlet.code.dto.user.UserCreateDTO;
-import hexlet.code.model.Label;
-import hexlet.code.model.TaskStatus;
-import hexlet.code.repository.LabelRepository;
-import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.service.LabelService;
+import hexlet.code.service.TaskStatusService;
 import hexlet.code.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -20,8 +19,8 @@ import java.util.Map;
 public class DataInitializer implements ApplicationRunner {
 
     private final UserService userService;
-    private final TaskStatusRepository taskStatusRepository;
-    private final LabelRepository labelRepository;
+    private final TaskStatusService taskStatusService;
+    private final LabelService labelService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -39,11 +38,11 @@ public class DataInitializer implements ApplicationRunner {
             "Published", "published");
 
         defaultStatuses.forEach((name, slug) -> {
-            var status = new TaskStatus(name, slug);
-            taskStatusRepository.save(status);
+            var status = new TaskStatusCreateDTO(name, slug);
+            taskStatusService.create(status);
         });
 
-        labelRepository.save(new Label("bug"));
-        labelRepository.save(new Label("feature"));
+        labelService.create(new LabelCreateDTO("bug"));
+        labelService.create(new LabelCreateDTO("feature"));
     }
 }
