@@ -19,14 +19,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private TaskStatusRepository taskStatusRepository;
-
-    @Autowired
-    private LabelRepository labelRepository;
+    private final UserService userService;
+    private final TaskStatusRepository taskStatusRepository;
+    private final LabelRepository labelRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
