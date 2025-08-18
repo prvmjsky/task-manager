@@ -6,11 +6,8 @@ import hexlet.code.dto.label.LabelUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.LabelMapper;
 import hexlet.code.repository.LabelRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -37,13 +34,13 @@ public class LabelService {
         return mapper.map(model);
     }
 
-    public LabelDTO create(@Valid @RequestBody LabelCreateDTO dto) {
+    public LabelDTO create(LabelCreateDTO dto) {
         var model = mapper.map(dto);
         repository.save(model);
         return mapper.map(model);
     }
 
-    public LabelDTO updateById(@Valid @RequestBody LabelUpdateDTO dto, @PathVariable Long id) {
+    public LabelDTO updateById(LabelUpdateDTO dto, Long id) {
 
         var model = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(String.format("Label with id %d not found", id)));
@@ -53,7 +50,7 @@ public class LabelService {
         return mapper.map(model);
     }
 
-    public void deleteById(@PathVariable Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }
