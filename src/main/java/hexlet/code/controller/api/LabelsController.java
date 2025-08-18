@@ -3,9 +3,7 @@ package hexlet.code.controller.api;
 import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.label.LabelDTO;
 import hexlet.code.dto.label.LabelUpdateDTO;
-import hexlet.code.exception.ResourceNotFoundException;
-import hexlet.code.mapper.LabelMapper;
-import hexlet.code.repository.LabelRepository;
+import hexlet.code.service.LabelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,50 +24,33 @@ import java.util.List;
 public class LabelsController {
 
     @Autowired
-    private LabelRepository repository;
-
-    @Autowired
-    private LabelMapper mapper;
+    private LabelService labelService;
 
     @GetMapping
-    private List<LabelDTO> index() {
-        return repository.findAll().stream()
-            .map(mapper::map)
-            .toList();
+    public List<LabelDTO> index() {
+        return labelService.findAll();
     }
 
     @GetMapping("/{id}")
     public LabelDTO show(@PathVariable Long id) {
-
-        var model = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(String.format("Label with id %d not found", id)));
-
-        return mapper.map(model);
+        return labelService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LabelDTO create(@Valid @RequestBody LabelCreateDTO dto) {
-        var model = mapper.map(dto);
-        repository.save(model);
-        return mapper.map(model);
+        return labelService.create(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public LabelDTO updateById(@Valid @RequestBody LabelUpdateDTO dto, @PathVariable Long id) {
-
-        var model = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(String.format("Label with id %d not found", id)));
-
-        mapper.update(dto, model);
-        repository.save(model);
-        return mapper.map(model);
+    public LabelDTO update(@Valid @RequestBody LabelUpdateDTO dto, @PathVariable Long id) {
+        return labelService.updateById(dto, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroyById(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void delete(@PathVariable Long id) {
+        labelService.deleteById(id);
     }
 }
