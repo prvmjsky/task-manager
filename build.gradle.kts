@@ -56,28 +56,34 @@ dependencies {
 	val springdocVer = "2.6.0"
 
 	implementation("org.mapstruct:mapstruct:$mapstructVer")
-	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVer")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVer")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVer")
-	testImplementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVer")
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("org.postgresql:postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("net.datafaker:datafaker:2.4.4")
-	testImplementation("org.instancio:instancio-junit:5.5.1")
-	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("io.sentry:sentry-opentelemetry-agent:8.19.0")
+
+	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVer")
+
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("org.postgresql:postgresql")
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVer")
+	testImplementation("org.instancio:instancio-junit:5.5.1")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:4.1.1")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 	jacocoAgent("org.jacoco:org.jacoco.agent:0.8.13")
 }
 
