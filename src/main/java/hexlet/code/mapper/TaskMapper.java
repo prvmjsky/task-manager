@@ -19,6 +19,7 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,11 +73,8 @@ public abstract class TaskMapper {
             return Collections.emptySet();
         }
 
-        return ids.stream()
-            .map(id -> labelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                    String.format("Task label with id %d not found", id))))
-            .collect(Collectors.toSet());
+        var foundLabels = labelRepository.findAllById(ids);
+        return new HashSet<>(foundLabels);
     }
 
     @Named("labelsToLabelIds")
