@@ -59,7 +59,6 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
     public UserDTO update(UserUpdateDTO dto, Long id) {
 
         var model = repository.findById(id)
@@ -70,7 +69,6 @@ public class UserService implements UserDetailsManager {
         return mapper.map(model);
     }
 
-    @PreAuthorize("@userUtils.isAdmin() or @userUtils.isCurrentUserId(#id)")
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
