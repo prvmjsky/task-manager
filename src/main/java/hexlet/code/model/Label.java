@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,7 +20,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Table(name = "labels")
@@ -41,9 +39,6 @@ public class Label implements BaseEntity {
     @Size(min = 3, max = 1000)
     @Column(unique = true)
     private String name;
-
-    @ManyToMany(mappedBy = "labelsUsed")
-    private Set<Task> tasks;
 
     @CreatedDate
     private LocalDate createdAt;
