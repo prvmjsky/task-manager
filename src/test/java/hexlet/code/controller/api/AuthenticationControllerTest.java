@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import hexlet.code.service.UserService;
 import hexlet.code.utils.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -52,7 +52,7 @@ public class AuthenticationControllerTest {
     private UserMapper userMapper;
 
     @Autowired
-    private UserService userService;
+    private UserDetailsManager userDetailsService;
 
     @Autowired
     private ObjectMapper om;
@@ -70,8 +70,7 @@ public class AuthenticationControllerTest {
     @Test
     public void testLogin() throws Exception {
 
-        // Using service instead of direct saving to repo for password encoding
-        userService.createUser(newUser);
+        userDetailsService.createUser(newUser);
 
         var loginData = Map.of(
             "username", newUser.getUsername(),

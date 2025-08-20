@@ -224,11 +224,4 @@ public class UsersControllerTest {
                 String.format("User with id %d not found", testUserId)));
         assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
     }
-
-    // NOT A CONTROLLER METHOD but uses the similar data to be tested
-    @Test
-    public void testCreateUserMethodFromUserService() throws Exception {
-        userService.createUser(newUser);
-        assertThat(userRepository.existsByEmail(newUser.getEmail())).isTrue();
-    }
 }
