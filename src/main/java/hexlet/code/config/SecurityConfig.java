@@ -1,7 +1,7 @@
 package hexlet.code.config;
 
 import hexlet.code.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,16 +23,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private JwtDecoder jwtDecoder;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
-    private UserService userService;
+    private final JwtDecoder jwtDecoder;
+    private final PasswordEncoder encoder;
+    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

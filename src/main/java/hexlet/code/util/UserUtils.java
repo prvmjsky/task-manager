@@ -3,7 +3,6 @@ package hexlet.code.util;
 import hexlet.code.exception.WrongCredentialException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +11,13 @@ import java.util.Objects;
 @Component
 public class UserUtils {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final String adminUserName;
 
-    private final String adminUserName = "hexlet@example.com";
+    public UserUtils(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.adminUserName = "hexlet@example.com";
+    }
 
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();

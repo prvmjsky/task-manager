@@ -9,7 +9,7 @@ import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,19 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsManager {
 
-    @Autowired
-    private UserRepository repository;
-
-    @Autowired
-    private UserMapper mapper;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
-    private UserUtils utils;
+    private final UserRepository repository;
+    private final UserMapper mapper;
+    private final PasswordEncoder encoder;
+    private final UserUtils utils;
 
     public List<UserDTO> findAll() {
         return repository.findAll().stream()
