@@ -22,7 +22,6 @@ public class TaskCreateDTO {
     @NotBlank
     private String title;
 
-    @NotBlank
     private String content;
 
     @NotNull
