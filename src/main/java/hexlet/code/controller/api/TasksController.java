@@ -31,15 +31,20 @@ public class TasksController {
     private final TaskService taskService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TaskDTO>> index(
         TaskParamsDTO params,
         @RequestParam(defaultValue = "1") int pageCount,
         @RequestParam(defaultValue = "15") int pageSize) {
 
-        return taskService.findAll(params, pageCount, pageSize);
+        var result = taskService.findAll(params, pageCount, pageSize);
+        return ResponseEntity.ok()
+            .header("X-Total-Count", String.valueOf(result.size()))
+            .body(result);
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public TaskDTO show(@PathVariable Long id) {
         return taskService.findById(id);
     }

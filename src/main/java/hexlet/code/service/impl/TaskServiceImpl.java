@@ -10,7 +10,6 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.specification.TaskSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +23,10 @@ public class TaskServiceImpl implements hexlet.code.service.TaskService {
     private final TaskSpecification specBuilder;
 
     @Override
-    public ResponseEntity<List<TaskDTO>> findAll(TaskParamsDTO params, int pageCount, int pageSize) {
-
+    public List<TaskDTO> findAll(TaskParamsDTO params, int pageCount, int pageSize) {
         var spec = specBuilder.build(params);
         var pageParams = PageRequest.of(pageCount - 1, pageSize);
-        var tasks = repository.findAll(spec, pageParams).map(mapper::map).toList();
-
-        return ResponseEntity.ok()
-            .header("X-Total-Count", String.valueOf(repository.findAll().size()))
-            .body(tasks);
+        return repository.findAll(spec, pageParams).map(mapper::map).toList();
     }
 
     @Override

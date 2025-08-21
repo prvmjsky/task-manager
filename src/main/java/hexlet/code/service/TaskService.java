@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface TaskService {
-    ResponseEntity<List<TaskDTO>> findAll(TaskParamsDTO params, int pageCount, int pageSize);
+    List<TaskDTO> findAll(TaskParamsDTO params, int pageCount, int pageSize);
     TaskDTO findById(Long id);
     TaskDTO create(TaskCreateDTO dto);
     TaskDTO updateById(TaskUpdateDTO dto, Long id);
