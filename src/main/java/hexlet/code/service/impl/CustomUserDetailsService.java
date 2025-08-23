@@ -1,6 +1,5 @@
 package hexlet.code.service.impl;
 
-import hexlet.code.exception.EntityExistsException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,14 +25,12 @@ public class CustomUserDetailsService implements UserDetailsManager {
     @Override
     public void createUser(UserDetails userData) {
 
-        if (userExists(userData.getUsername())) {
-            throw new EntityExistsException("User with this username already exists");
-        }
-
         var user = new User();
         user.setEmail(userData.getUsername());
+
         var passwordDigest = encoder.encode(userData.getPassword());
         user.setPasswordDigest(passwordDigest);
+
         repository.save(user);
     }
 

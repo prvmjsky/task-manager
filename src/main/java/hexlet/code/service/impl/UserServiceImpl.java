@@ -3,7 +3,6 @@ package hexlet.code.service.impl;
 import hexlet.code.dto.user.UserCreateDTO;
 import hexlet.code.dto.user.UserDTO;
 import hexlet.code.dto.user.UserUpdateDTO;
-import hexlet.code.exception.EntityExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
@@ -38,11 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO create(UserCreateDTO dto) {
-
-        if (repository.existsByEmail(dto.getEmail())) {
-            throw new EntityExistsException("User with this email already exists");
-        }
-
         var model = mapper.map(dto);
         repository.save(model);
         return mapper.map(model);

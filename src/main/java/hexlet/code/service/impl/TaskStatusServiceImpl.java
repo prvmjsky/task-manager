@@ -3,7 +3,6 @@ package hexlet.code.service.impl;
 import hexlet.code.dto.taskstatus.TaskStatusCreateDTO;
 import hexlet.code.dto.taskstatus.TaskStatusDTO;
 import hexlet.code.dto.taskstatus.TaskStatusUpdateDTO;
-import hexlet.code.exception.EntityExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.repository.TaskStatusRepository;
@@ -37,11 +36,6 @@ public class TaskStatusServiceImpl implements hexlet.code.service.TaskStatusServ
 
     @Override
     public TaskStatusDTO create(TaskStatusCreateDTO dto) {
-
-        if (repository.existsBySlug(dto.getSlug())) {
-            throw new EntityExistsException("Task status with this slug already exists");
-        }
-
         var model = mapper.map(dto);
         repository.save(model);
         return mapper.map(model);
